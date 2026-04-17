@@ -1,0 +1,34 @@
+name: Reporte Diario Databricks
+
+on:
+  schedule:
+    # Se ejecuta todos los días a las 13:00 UTC (Aprox 8:00 AM hora de Latam)
+    - cron: '0 13 * * *'
+  workflow_dispatch: # Te permite ejecutarlo manualmente con un botón para probar
+
+jobs:
+  enviar_reporte:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Clonar el repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Instalar librerías
+      run: |
+        pip install pandas databricks-sql-connector openpyxl
+        
+    - name: Ejecutar script de extracción y envío
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        WAREHOUSE_ID: ${{ secrets.WAREHOUSE_ID }}
+        REMITENTE: ${{ secrets.REMITENTE }}
+        PASSWORD_APP: ${{ secrets.PASSWORD_APP }}
+        DESTINATARIO: ${{ secrets.DESTINATARIO }}
+      run: python script_diario.py
