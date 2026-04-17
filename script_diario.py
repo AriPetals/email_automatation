@@ -43,9 +43,7 @@ def extraer_datos_y_enviar():
     mensaje['From'] = REMITENTE
     mensaje['To'] = DESTINATARIO
     mensaje['Subject'] = "Reporte Diario Automatizado"
-    mensaje.attach(MIMEText("Hola,\n\nAdjunto el reporte diario de Databricks.\n\nSaludos.", 'plain'))
-
-    with open(ruta_archivo, "rb") as adjunto:
+    mensaje.attach(MIMEText("Hola,\n\nAdjunto encontrarás el reporte diario correspondiente a Formulario Altas - Reactivaciones.\n\nPor favor, no responder a este correo automatico.\n\nSaludos cordiales.", 'plain'))    with open(ruta_archivo, "rb") as adjunto:
         parte = MIMEBase('application', 'octet-stream')
         parte.set_payload(adjunto.read())
         encoders.encode_base64(parte)
