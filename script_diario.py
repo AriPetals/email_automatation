@@ -32,9 +32,10 @@ def extraer_datos_y_enviar():
     df_formulario_salida = pd.read_sql(query, connection)
     print(f"Total registros extraídos: {len(df_formulario_salida)}")
     connection.close()
-
+    # Obtener fecha actual en formato ddmmyyyy
+    fecha_actual = datetime.now().strftime("%d%m%Y")
     # Guardar como Excel
-    ruta_archivo = "reporte_diario.xlsx"
+    ruta_archivo = "Formulario_salida ({fecha_actual}).xlsx"
     df_formulario_salida.to_excel(ruta_archivo, index=False)
     
     # 2. Configurar y enviar correo
@@ -42,8 +43,9 @@ def extraer_datos_y_enviar():
     mensaje = MIMEMultipart()
     mensaje['From'] = REMITENTE
     mensaje['To'] = DESTINATARIO
-    mensaje['Subject'] = "Reporte Diario Automatizado"
-    mensaje.attach(MIMEText("Hola,\n\nAdjunto encontrarás el reporte diario correspondiente a Formulario Altas - Reactivaciones.\n\nPor favor, no responder a este correo automatico.\n\nSaludos cordiales.", 'plain'))    with open(ruta_archivo, "rb") as adjunto:
+    mensaje['Subject'] = f"Reporte Diario Automatizado ({fecha_actual})"
+    mensaje.attach(MIMEText("Hola,\n\nAdjunto encontrarás el reporte diario correspondiente a Formulario Altas - Reactivaciones.\n\nPor favor, no responder a este correo automatico.\n\nSaludos cordiales.", 'plain'))    
+    with open(ruta_archivo, "rb") as adjunto:
         parte = MIMEBase('application', 'octet-stream')
         parte.set_payload(adjunto.read())
         encoders.encode_base64(parte)
